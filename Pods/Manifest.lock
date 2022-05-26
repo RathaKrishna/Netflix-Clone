@@ -1,0 +1,22 @@
+PODS:
+  - SDWebImage (5.12.5):
+    - SDWebImage/Core (= 5.12.5)
+  - SDWebImage/Core (5.12.5)
+  - SnapKit (5.0.1)
+
+DEPENDENCIES:
+  - SDWebImage
+  - SnapKit (~> 5.0.0)
+
+SPEC REPOS:
+  trunk:
+    - SDWebImage
+    - SnapKit
+
+SPEC CHECKSUMS:
+  SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+
+PODFILE CHECKSUM: 00d367fd8b6abc5a9ea25ce155ba74f172ed2028
+
+COCOAPODS: 1.11.3

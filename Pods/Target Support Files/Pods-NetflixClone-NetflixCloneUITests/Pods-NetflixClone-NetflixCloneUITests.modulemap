@@ -1,0 +1,6 @@
+framework module Pods_NetflixClone_NetflixCloneUITests {
+  umbrella header "Pods-NetflixClone-NetflixCloneUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

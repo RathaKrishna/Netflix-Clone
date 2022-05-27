@@ -7,6 +7,13 @@
 
 import UIKit
 
+enum Sections: Int {
+    case TrendingMovies = 0
+    case TrendingTv = 1
+    case Popular = 2
+    case Upcoming = 3
+    case TopRated = 4
+}
 class HomeViewController: UIViewController {
 
     let sectionTitles: [String] = ["Trending Movies", "Trending TV", "Popular", "Upcoming Moviews", "Top rated"]
@@ -17,6 +24,9 @@ class HomeViewController: UIViewController {
         table.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
         return table
     }()
+    
+    var headerView: HeroHeaderView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -25,10 +35,10 @@ class HomeViewController: UIViewController {
         tableView.dataSource = self
         configureNav()
         let heraderView = HeroHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 400))
+        headerView = heraderView
+        tableView.tableHeaderView = headerView
+        getHeaderImg()
         
-        tableView.tableHeaderView = heraderView
-        
-        getTrendingMovies()
     }
     
     override func viewDidLayoutSubviews() {
@@ -49,24 +59,22 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .white
     }
     
-    private func getTrendingMovies() {
-        APICaller.shared.getUpcomingMovies { results in
+    private func getHeaderImg() {
+        APICaller.shared.getMoviesData(with: Constants.trendingMovies) {[weak self]results in
             switch results {
-            case .success(let tvs):
-                print(tvs)
+            case .success(let movies):
+                DispatchQueue.main.async {
+                    let url = "\(Constants.thumbnailImage)\(movies[0].backdrop_path ?? "")"
+                    self?.headerView?.configureImg(with:url)
+                }
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
-//        APICaller.shared.getTrendingMovies { result in
-//            switch result {
-//            case .success(let movies):
-//                print(movies)
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
     }
+    
+    
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -82,6 +90,34 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.identifier, for: indexPath) as? CollectionViewTableViewCell else {
             return UITableViewCell()
+        }
+        var sectionUrl = ""
+        switch indexPath.section {
+        case Sections.TrendingMovies.rawValue:
+            sectionUrl = Constants.trendingMovies
+          
+        case Sections.TrendingTv.rawValue:
+            sectionUrl = Constants.trendingTvs
+        case Sections.Popular.rawValue:
+            sectionUrl = Constants.popularMovies
+        case Sections.Upcoming.rawValue:
+            sectionUrl = Constants.upcomingMovies
+        case Sections.TopRated.rawValue:
+            sectionUrl = Constants.topRatedMovies
+        default:
+            sectionUrl = Constants.trendingMovies
+        }
+        
+        APICaller.shared.getMoviesData(with: sectionUrl) {results in
+            switch results {
+            case .success(let movies):
+                DispatchQueue.main.async {
+                    cell.configure(with: movies)
+                }
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
         
         return cell

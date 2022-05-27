@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import SnapKit
 
 class HeroHeaderView: UIView {
 
@@ -47,7 +48,7 @@ class HeroHeaderView: UIView {
         addGradient()
         addSubview(playButton)
         addSubview(downloadButton)
-        applyConstraints()
+//        applyConstraints()
         configureImg(with: "")
     }
     
@@ -64,27 +65,40 @@ class HeroHeaderView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         imageView.frame = bounds
-        
+        playButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(55)
+            make.bottom.equalToSuperview().offset(-55)
+            make.width.greaterThanOrEqualTo(120)
+            make.height.equalTo(44)
+        }
+        downloadButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-55)
+            make.bottom.equalToSuperview().offset(-55)
+            make.width.greaterThanOrEqualTo(120)
+            make.height.equalTo(44)
+        }
+
     }
     
-    public func configureImg(with img: String) {
-        imageView.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/original/qK7Ssnrfvrt65F66A1thvehfQg2.jpg"), placeholderImage: UIImage(named: "home_header_img"))
+    public func configureImg(with imgUrl: String) {
+        imageView.sd_setImage(with: URL(string: imgUrl), placeholderImage: UIImage(named: "home_header_img"))
+       
     }
     
-    private func applyConstraints() {
-        let playButtonConstraints = [
-            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 55),
-            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
-            playButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
-        ]
-        
-        let downloadButtonConstraints = [
-            downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -55),
-            downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
-            downloadButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
-        ]
-        
-        NSLayoutConstraint.activate(playButtonConstraints)
-        NSLayoutConstraint.activate(downloadButtonConstraints)
-    }
+//    private func applyConstraints() {
+//        let playButtonConstraints = [
+//            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 55),
+//            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
+//            playButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
+//        ]
+//
+//        let downloadButtonConstraints = [
+//            downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -55),
+//            downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
+//            downloadButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
+//        ]
+//
+//        NSLayoutConstraint.activate(playButtonConstraints)
+//        NSLayoutConstraint.activate(downloadButtonConstraints)
+//    }
 }

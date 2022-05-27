@@ -52,13 +52,19 @@ class HomeViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
     
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: nil),
+            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: #selector(didProfileButtonClicked)),
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil),
         ]
 
         navigationController?.navigationBar.tintColor = .white
     }
     
+    @objc private func didProfileButtonClicked() {
+        let vc = ProfileViewController()
+        vc.navigationItem.largeTitleDisplayMode = .always
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
     private func getHeaderImg() {
         APICaller.shared.getMoviesData(with: Constants.trendingMovies) {[weak self]results in
             switch results {

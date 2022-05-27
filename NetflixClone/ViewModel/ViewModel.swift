@@ -15,3 +15,10 @@ struct UpcomingViewModel {
     let releaseDate: String
     let voteAverage: Double
 }
+
+struct SearchViewModel {
+    let imgUrl: String
+    let title: String
+    let overview: String
+    let type: String
+}

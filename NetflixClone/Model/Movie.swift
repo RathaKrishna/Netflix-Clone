@@ -24,5 +24,26 @@ struct Movie: Codable {
     let vote_average: Double
     let name: String?
     let original_name: String?
+    let first_air_date: String?
     
 }
+
+struct SearchResponse: Codable {
+    let results: [MovieTV]
+}
+
+struct MovieTV: Codable {
+    let id: Int
+    let overview: String?
+    let media_type: String?
+    let title: String?
+    let original_title: String?
+    let poster_path: String?
+    let backdrop_path: String?
+    let release_date: String?
+    let name: String?
+    let original_name: String?
+    
+}
+
+

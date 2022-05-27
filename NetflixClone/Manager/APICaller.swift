@@ -17,6 +17,7 @@ struct Constants {
     static let popularMovies = baseURL + "/3/movie/popular?api_key=" + APIKEY
     static let upcomingMovies = baseURL + "/3/movie/upcoming?api_key=" + APIKEY
     static let topRatedMovies = baseURL + "/3/movie/top_rated?api_key=" + APIKEY
+    static let searchAll = "\(baseURL)/3/search/multi?api_key=\(APIKEY)&query="
     
     static let originalImage =  imageURL + "/t/p/original/"
     static let thumbnailImage =  imageURL + "/t/p/w500/"
@@ -52,5 +53,24 @@ class APICaller {
         task.resume()
     }
     
+    // Search All
+    func searchAll(with url: String, completion: @escaping (Result<[MovieTV], Error>) -> Void){
+        guard let url = URL(string: url) else {return}
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            guard let data = data, error == nil else {
+                completion(.failure(APIError.failedToGetData))
+                return
+            }
+            do {
+                let result = try JSONDecoder().decode(SearchResponse.self, from: data)
+                completion(.success(result.results))
+            }
+            catch {
+                completion(.failure(error))
+            }
+
+        }
+        task.resume()
+    }
     
 }

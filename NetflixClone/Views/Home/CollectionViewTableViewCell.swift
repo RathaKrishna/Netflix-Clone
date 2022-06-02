@@ -12,7 +12,7 @@ protocol CollectionViewTableViewCellDelegate: AnyObject {
 }
 
 class CollectionViewTableViewCell: UITableViewCell {
-
+    
     static let identifier = "CollectionViewTableViewCell"
     weak var delegate: CollectionViewTableViewCellDelegate?
     
@@ -55,7 +55,7 @@ class CollectionViewTableViewCell: UITableViewCell {
     }
     
     private func downloadMovieAt(indexPath: IndexPath) {
-//        MovieItem.
+        //        MovieItem.
         DataPersistanceManager.shared.downloadMovieWith(model: self.movies[indexPath.row]) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -72,12 +72,12 @@ class CollectionViewTableViewCell: UITableViewCell {
 }
 
 extension CollectionViewTableViewCell : UICollectionViewDelegate, UICollectionViewDataSource {
-   
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
     }
     
- 
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeViewCollectionViewCell.identifier, for: indexPath) as? HomeViewCollectionViewCell else {
             return UICollectionViewCell()

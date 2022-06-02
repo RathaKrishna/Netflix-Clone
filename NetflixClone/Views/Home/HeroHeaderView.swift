@@ -10,7 +10,7 @@ import SDWebImage
 import SnapKit
 
 class HeroHeaderView: UIView {
-
+    
     private let imageView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
@@ -46,7 +46,7 @@ class HeroHeaderView: UIView {
         addGradient()
         addSubview(playButton)
         addSubview(downloadButton)
-//        applyConstraints()
+        //        applyConstraints()
     }
     
     
@@ -74,28 +74,28 @@ class HeroHeaderView: UIView {
             make.width.greaterThanOrEqualTo(120)
             make.height.equalTo(44)
         }
-
+        
     }
     public func configure(with model: Movie){
         let url = "\(Constants.thumbnailImage)\(model.backdrop_path ?? "")"
         imageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(systemName: "photo"))
     }
-
     
-//    private func applyConstraints() {
-//        let playButtonConstraints = [
-//            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 55),
-//            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
-//            playButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
-//        ]
-//
-//        let downloadButtonConstraints = [
-//            downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -55),
-//            downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
-//            downloadButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
-//        ]
-//
-//        NSLayoutConstraint.activate(playButtonConstraints)
-//        NSLayoutConstraint.activate(downloadButtonConstraints)
-//    }
+    // Demo for Auto layout without snapkit tool
+    //    private func applyConstraints() {
+    //        let playButtonConstraints = [
+    //            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 55),
+    //            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
+    //            playButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
+    //        ]
+    //
+    //        let downloadButtonConstraints = [
+    //            downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -55),
+    //            downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
+    //            downloadButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
+    //        ]
+    //
+    //        NSLayoutConstraint.activate(playButtonConstraints)
+    //        NSLayoutConstraint.activate(downloadButtonConstraints)
+    //    }
 }

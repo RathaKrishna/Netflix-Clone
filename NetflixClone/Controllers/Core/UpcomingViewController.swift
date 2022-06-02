@@ -8,7 +8,7 @@
 import UIKit
 
 class UpcomingViewController: UIViewController {
-
+    
     private var viewModels = [MovieViewModel]()
     private var moviesModel = [Movie]()
     let tableView: UITableView = {
@@ -18,7 +18,7 @@ class UpcomingViewController: UIViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .systemBackground
         navigationItem.title = "Upcoming"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -29,12 +29,12 @@ class UpcomingViewController: UIViewController {
         
         getUpMovies()
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
-
+    // get upcoming movies data
     private func getUpMovies() {
         APICaller.shared.getMoviesData(with: Constants.upcomingMovies) {[weak self] result in
             DispatchQueue.main.async {
@@ -53,7 +53,7 @@ class UpcomingViewController: UIViewController {
     }
 }
 
-
+// MARK: -Tableview
 extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModels.count

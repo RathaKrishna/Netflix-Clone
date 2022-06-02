@@ -8,7 +8,7 @@
 import UIKit
 
 class DownloadViewController: UIViewController {
-
+    
     private var viewModels = [MovieViewModel]()
     private var moviesModel = [MovieItem]()
     
@@ -41,22 +41,22 @@ class DownloadViewController: UIViewController {
         tableView.frame = view.bounds
     }
     
-    
+    // get db saved data
     private func getDownloadMovies() {
         DataPersistanceManager.shared.fetchMoviesFromDB { [weak self ] restul in
-                switch restul {
-                case .success(let movies):
-                    self?.moviesModel = movies
-                   
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+            switch restul {
+            case .success(let movies):
+                self?.moviesModel = movies
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
             
         }
     }
     
 }
-
+// MARK: - Tableview Delegate
 extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return moviesModel.count
@@ -79,16 +79,14 @@ extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
         switch editingStyle {
         case .delete:
             DataPersistanceManager.shared.deleteMovieFromDB(model: self.moviesModel[indexPath.row]) {[weak self] result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success():
-                        self?.moviesModel.remove(at: indexPath.row)
-                        tableView.deleteRows(at: [indexPath], with: .fade)
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
+                switch result {
+                case .success():
+                    print("deleted")
+                case .failure(let error):
+                    print(error.localizedDescription)
                 }
-                
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                self?.moviesModel.remove(at: indexPath.row)
             }
         default:
             break
@@ -96,9 +94,6 @@ extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-//        let vc = MovieDetailsViewController(with: self.moviesModel[indexPath.row])
-//        vc.navigationItem.largeTitleDisplayMode = .never
-//        vc.hidesBottomBarWhenPushed = true
-//        navigationController?.pushViewController(vc, animated: true)
+        
     }
 }

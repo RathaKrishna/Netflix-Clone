@@ -120,9 +120,9 @@ class UpcomingTableViewCell: UITableViewCell {
             make.center.equalTo(albumImgView)
         }
     }
-
+    
     public func configure(with model: MovieViewModel) {
-         
+        
         albumImgView.sd_setImage(with: URL(string: model.imgUrl), placeholderImage: UIImage(named: "home_header_img"))
         titleLabel.text = model.title
         descLabel.text = model.overview

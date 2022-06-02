@@ -14,8 +14,9 @@ enum Sections: Int {
     case Upcoming = 3
     case TopRated = 4
 }
-class HomeViewController: UIViewController {
 
+class HomeViewController: UIViewController {
+    
     let sectionTitles: [String] = ["Trending Movies", "Trending TV", "Popular", "Upcoming Moviews", "Top rated"]
     
     
@@ -48,26 +49,22 @@ class HomeViewController: UIViewController {
         super.viewDidLayoutSubviews()
         self.tableView.frame = view.bounds
     }
-
+    
+    /** Configure Navigation bar
+     */
     private func configureNav() {
         var image = UIImage(named: "logo_img")
         image = image?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-    
+        
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: #selector(didProfileButtonClicked)),
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil),
         ]
-
+        
         navigationController?.navigationBar.tintColor = .label
     }
-    
-    @objc private func didProfileButtonClicked() {
-        let vc = ProfileViewController()
-        vc.navigationItem.largeTitleDisplayMode = .always
-        vc.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(vc, animated: true)
-    }
+    // Get Header image data
     private func getHeaderImg() {
         APICaller.shared.getMoviesData(with: Constants.trendingMovies) {[weak self]results in
             switch results {
@@ -75,9 +72,6 @@ class HomeViewController: UIViewController {
                 DispatchQueue.main.async {
                     self?.randommovies = movies
                     self?.updateHeader()
-//                    let num = Int.random(in: 0..<movies.count)
-//                    let url = "\(Constants.thumbnailImage)\(movies[num].backdrop_path ?? "")"
-//                    self?.headerView?.configureImg(with:url)
                 }
                 
             case .failure(let error):
@@ -90,8 +84,16 @@ class HomeViewController: UIViewController {
         guard let movie = randommovies.randomElement() else { return }
         self.headerView?.configure(with: movie)
     }
+    
+    // Button Actions
+    @objc private func didProfileButtonClicked() {
+        let vc = ProfileViewController()
+        vc.navigationItem.largeTitleDisplayMode = .always
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
-
+// MARK: - Tableview
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, CollectionViewTableViewCellDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -110,7 +112,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, Collec
         switch indexPath.section {
         case Sections.TrendingMovies.rawValue:
             sectionUrl = Constants.trendingMovies
-          
+            
         case Sections.TrendingTv.rawValue:
             sectionUrl = Constants.trendingTvs
         case Sections.Popular.rawValue:
@@ -158,14 +160,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, Collec
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionTitles[section]
     }
-    
+    // hide and show navigation bar on scroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let defaultOffset = view.safeAreaInsets.top
         let offset = scrollView.contentOffset.y + defaultOffset
         
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
     }
-    
+    // collectionview delegate
     func didCellClicked(with item: Movie) {
         navigationController?.navigationBar.transform = .init(translationX: 0, y: 0)
         let vc = MovieDetailsViewController(with: item)

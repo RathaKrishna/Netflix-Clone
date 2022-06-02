@@ -8,10 +8,10 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-
+    
     private var viewModels = [MovieViewModel]()
     private var moviesModel = [Movie]()
-
+    
     let tableView: UITableView = {
         let tablView = UITableView()
         tablView.register(UpcomingTableViewCell.self, forCellReuseIdentifier: UpcomingTableViewCell.identifier)
@@ -42,12 +42,12 @@ class SearchViewController: UIViewController {
         getUpMovies()
         
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
-
+    
     private func getUpMovies() {
         APICaller.shared.getMoviesData(with: Constants.trendingMovies) {[weak self] result in
             DispatchQueue.main.async {
@@ -68,7 +68,7 @@ class SearchViewController: UIViewController {
     
 }
 
-
+// MARK: - Tableview Delegate
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModels.count
@@ -104,28 +104,29 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         return config
     }
 }
-
+// MARK: - Search delegate
 extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating, SearchResultViewControllerDelegate {
-   
+    
+    // auto search
     func updateSearchResults(for searchController: UISearchController) {
         /*let searchBar = searchController.searchBar
-        
-        guard let quary = searchBar.text , !quary.trimmingCharacters(in: .whitespaces).isEmpty, quary.trimmingCharacters(in: .whitespaces).count >= 3, let searchResult = searchController.searchResultsController as? SearchResultViewController else { return }
-        
-        APICaller.shared.searchAll(with: quary) {result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let movies):
-                    searchResult.update(with: movies)
-
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-            
-        }*/
+         
+         guard let quary = searchBar.text , !quary.trimmingCharacters(in: .whitespaces).isEmpty, quary.trimmingCharacters(in: .whitespaces).count >= 3, let searchResult = searchController.searchResultsController as? SearchResultViewController else { return }
+         
+         APICaller.shared.searchAll(with: quary) {result in
+         DispatchQueue.main.async {
+         switch result {
+         case .success(let movies):
+         searchResult.update(with: movies)
+         
+         case .failure(let error):
+         print(error.localizedDescription)
+         }
+         }
+         
+         }*/
     }
-    
+    // search when search button clicked
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchResult = searchController.searchResultsController as? SearchResultViewController,  let searchStr =  searchBar.text, !searchStr.isEmpty else {
             return
@@ -137,7 +138,7 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating, Se
                 switch result {
                 case .success(let movies):
                     searchResult.update(with: movies)
-
+                    
                 case .failure(let error):
                     print(error.localizedDescription)
                 }

@@ -35,8 +35,8 @@ class HomeViewCollectionViewCell: UICollectionViewCell {
     
     public func configure(with name: String) {
         
-            let url = URL(string: Constants.thumbnailImage + name)
-            self.posterImgView.sd_setImage(with: url, placeholderImage: UIImage(named: "home_header_img"))
+        let url = URL(string: Constants.thumbnailImage + name)
+        self.posterImgView.sd_setImage(with: url, placeholderImage: UIImage(named: "home_header_img"))
         
         
     }

@@ -19,7 +19,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
     private let starImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFit
-//        let imgae = UIImage(systemName: "star.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 40) )
+        //        let imgae = UIImage(systemName: "star.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 40) )
         imgView.image = UIImage(systemName: "star.fill")
         imgView.tintColor = .yellow
         return imgView

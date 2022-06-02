@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol CollectionViewTableViewCellDelegate: AnyObject {
+    func didCellClicked(with item: Movie);
+}
+
 class CollectionViewTableViewCell: UITableViewCell {
 
     static let identifier = "CollectionViewTableViewCell"
+    weak var delegate: CollectionViewTableViewCellDelegate?
     
     private var movies: [Movie] = [Movie]()
     
@@ -49,6 +54,21 @@ class CollectionViewTableViewCell: UITableViewCell {
         
     }
     
+    private func downloadMovieAt(indexPath: IndexPath) {
+//        MovieItem.
+        DataPersistanceManager.shared.downloadMovieWith(model: self.movies[indexPath.row]) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success():
+                    print("data saved")
+                    NotificationCenter.default.post(name: NSNotification.Name("MOVIESAVED"), object: nil)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
 }
 
 extension CollectionViewTableViewCell : UICollectionViewDelegate, UICollectionViewDataSource {
@@ -67,7 +87,22 @@ extension CollectionViewTableViewCell : UICollectionViewDelegate, UICollectionVi
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let movie = movies[indexPath.row]
+        self.delegate?.didCellClicked(with: movie)
+        
+    }
     
-    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil){ _ in
+            let downloadAction = UIAction(title: "Download", image: UIImage(systemName: "arrow.down.app.fill"), identifier: nil, discoverabilityTitle: "Discover", state: .off) { _ in
+                self.downloadMovieAt(indexPath: indexPath)
+            }
+            return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [downloadAction])
+            
+        }
+        return config
+    }
     
 }

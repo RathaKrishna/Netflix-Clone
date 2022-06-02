@@ -26,6 +26,7 @@ class HomeViewController: UIViewController {
     }()
     
     var headerView: HeroHeaderView?
+    private var randommovies: [Movie] = [Movie]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,13 +35,15 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         configureNav()
-        let heraderView = HeroHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 400))
-        headerView = heraderView
+        headerView = HeroHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 400))
         tableView.tableHeaderView = headerView
         getHeaderImg()
         
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateHeader()
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.tableView.frame = view.bounds
@@ -56,7 +59,7 @@ class HomeViewController: UIViewController {
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil),
         ]
 
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.tintColor = .label
     }
     
     @objc private func didProfileButtonClicked() {
@@ -70,8 +73,11 @@ class HomeViewController: UIViewController {
             switch results {
             case .success(let movies):
                 DispatchQueue.main.async {
-                    let url = "\(Constants.thumbnailImage)\(movies[0].backdrop_path ?? "")"
-                    self?.headerView?.configureImg(with:url)
+                    self?.randommovies = movies
+                    self?.updateHeader()
+//                    let num = Int.random(in: 0..<movies.count)
+//                    let url = "\(Constants.thumbnailImage)\(movies[num].backdrop_path ?? "")"
+//                    self?.headerView?.configureImg(with:url)
                 }
                 
             case .failure(let error):
@@ -80,10 +86,13 @@ class HomeViewController: UIViewController {
         }
     }
     
-    
+    private func updateHeader() {
+        guard let movie = randommovies.randomElement() else { return }
+        self.headerView?.configure(with: movie)
+    }
 }
 
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource, CollectionViewTableViewCellDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return sectionTitles.count
@@ -125,7 +134,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 print(error.localizedDescription)
             }
         }
-        
+        cell.delegate = self
         return cell
     }
     
@@ -142,7 +151,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         header.textLabel?.frame = CGRect(x: header.bounds.origin.x + 20, y: header.bounds.origin.y, width: 100, height: header.bounds.height)
-        header.textLabel?.textColor = .white
+        header.textLabel?.textColor = .label
         header.textLabel?.text = header.textLabel?.text?.capitalizeFirstLetter()
     }
     
@@ -155,5 +164,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let offset = scrollView.contentOffset.y + defaultOffset
         
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
+    }
+    
+    func didCellClicked(with item: Movie) {
+        navigationController?.navigationBar.transform = .init(translationX: 0, y: 0)
+        let vc = MovieDetailsViewController(with: item)
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

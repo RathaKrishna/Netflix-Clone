@@ -9,17 +9,17 @@ import UIKit
 
 class SearchViewController: UIViewController {
 
-    private var viewModels = [SearchViewModel]()
+    private var viewModels = [MovieViewModel]()
+    private var moviesModel = [Movie]()
 
-    
     let tableView: UITableView = {
         let tablView = UITableView()
-        tablView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.identifier)
+        tablView.register(UpcomingTableViewCell.self, forCellReuseIdentifier: UpcomingTableViewCell.identifier)
         return tablView
     }()
     
     private let searchController: UISearchController = {
-        let controller = UISearchController(searchResultsController: SearResultViewController())
+        let controller = UISearchController(searchResultsController: SearchResultViewController())
         controller.searchBar.placeholder = "Search Movie,TV show..."
         controller.searchBar.searchBarStyle = .minimal
         return controller
@@ -36,6 +36,9 @@ class SearchViewController: UIViewController {
         view.addSubview(tableView)
         navigationItem.searchController = searchController
         
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        
         getUpMovies()
         
     }
@@ -46,12 +49,13 @@ class SearchViewController: UIViewController {
     }
 
     private func getUpMovies() {
-        APICaller.shared.searchAll(with: "\(Constants.searchAll)") {[weak self] result in
+        APICaller.shared.getMoviesData(with: Constants.trendingMovies) {[weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movies):
+                    self?.moviesModel = movies
                     self?.viewModels = movies.compactMap({
-                        SearchViewModel(imgUrl: "\(Constants.thumbnailImage)\($0.poster_path ?? "")", title: $0.title ?? $0.name ?? "", overview: $0.overview ?? "", type: $0.media_type ?? "")
+                        MovieViewModel(imgUrl: "\(Constants.thumbnailImage)\($0.poster_path ?? "")", title: $0.title ?? "", overview: $0.overview, voteCount: $0.vote_count, releaseDate: $0.release_date ?? "", voteAverage: $0.vote_average)
                     })
                     self?.tableView.reloadData()
                 case .failure(let error):
@@ -62,22 +66,6 @@ class SearchViewController: UIViewController {
         }
     }
     
-    private func discoverMovies(){
-        APICaller.shared.searchAll(with: "\(Constants.searchAll)hacks") {[weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let movies):
-                    self?.viewModels = movies.compactMap({
-                        SearchViewModel(imgUrl: "\(Constants.thumbnailImage)\($0.poster_path ?? "")", title: $0.title ?? $0.name ?? "", overview: $0.overview ?? "", type: $0.media_type ?? "")
-                    })
-                    self?.tableView.reloadData()
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-            
-        }
-    }
 }
 
 
@@ -87,7 +75,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier, for: indexPath) as? SearchTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingTableViewCell.identifier, for: indexPath) as? UpcomingTableViewCell else {
             return UITableViewCell()
         }
         cell.configure(with: viewModels[indexPath.row])
@@ -97,8 +85,71 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 110
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let vc = MovieDetailsViewController(with: self.moviesModel[indexPath.row])
+        vc.navigationItem.largeTitleDisplayMode = .never
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil){ _ in
+            let downloadAction = UIAction(title: "Download", image: UIImage(systemName: "arrow.down.app.fill"), identifier: nil, discoverabilityTitle: nil,  state: .off) { _ in
+                print("download")
+            }
+            return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [downloadAction])
+        }
+        return config
+    }
 }
 
-extension SearchViewController: UISearchControllerDelegate {
+extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating, SearchResultViewControllerDelegate {
+   
+    func updateSearchResults(for searchController: UISearchController) {
+        /*let searchBar = searchController.searchBar
+        
+        guard let quary = searchBar.text , !quary.trimmingCharacters(in: .whitespaces).isEmpty, quary.trimmingCharacters(in: .whitespaces).count >= 3, let searchResult = searchController.searchResultsController as? SearchResultViewController else { return }
+        
+        APICaller.shared.searchAll(with: quary) {result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movies):
+                    searchResult.update(with: movies)
+
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+            
+        }*/
+    }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchResult = searchController.searchResultsController as? SearchResultViewController,  let searchStr =  searchBar.text, !searchStr.isEmpty else {
+            return
+        }
+        searchResult.delegate = self
+        
+        APICaller.shared.searchAll(with: searchStr) {result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movies):
+                    searchResult.update(with: movies)
+
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+            
+        }
+    }
+    
+    func didSearchResultClicked(_ model: Movie) {
+        let vc = MovieDetailsViewController(with: model)
+        vc.hidesBottomBarWhenPushed = true
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }

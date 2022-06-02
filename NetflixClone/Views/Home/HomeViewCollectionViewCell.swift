@@ -13,7 +13,6 @@ class HomeViewCollectionViewCell: UICollectionViewCell {
     private let posterImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
-        imgView.backgroundColor = .systemRed
         return imgView
     }()
     override init(frame: CGRect) {

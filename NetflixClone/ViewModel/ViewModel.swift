@@ -1,5 +1,5 @@
 //
-//  UpcomingViewModel.swift
+//  MovieViewModel.swift
 //  NetflixClone
 //
 //  Created by Rathakrishnan Ramasamy on 26/05/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UpcomingViewModel {
+struct MovieViewModel {
     let imgUrl: String
     let title: String
     let overview: String
@@ -16,9 +16,3 @@ struct UpcomingViewModel {
     let voteAverage: Double
 }
 
-struct SearchViewModel {
-    let imgUrl: String
-    let title: String
-    let overview: String
-    let type: String
-}

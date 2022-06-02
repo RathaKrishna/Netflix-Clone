@@ -9,7 +9,8 @@ import UIKit
 
 class UpcomingViewController: UIViewController {
 
-    private var viewModels = [UpcomingViewModel]()
+    private var viewModels = [MovieViewModel]()
+    private var moviesModel = [Movie]()
     let tableView: UITableView = {
         let tablView = UITableView()
         tablView.register(UpcomingTableViewCell.self, forCellReuseIdentifier: UpcomingTableViewCell.identifier)
@@ -39,15 +40,15 @@ class UpcomingViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movies):
+                    self?.moviesModel = movies
                     self?.viewModels = movies.compactMap({
-                        UpcomingViewModel(imgUrl: "\(Constants.thumbnailImage)\($0.poster_path ?? "")", title: $0.title ?? "", overview: $0.overview, voteCount: $0.vote_count, releaseDate: $0.release_date ?? "", voteAverage: $0.vote_average)
+                        MovieViewModel(imgUrl: "\(Constants.thumbnailImage)\($0.poster_path ?? "")", title: $0.title ?? "", overview: $0.overview, voteCount: $0.vote_count, releaseDate: $0.release_date ?? "", voteAverage: $0.vote_average)
                     })
                     self?.tableView.reloadData()
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
             }
-            
         }
     }
 }
@@ -68,5 +69,12 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 110
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let vc = MovieDetailsViewController(with: self.moviesModel[indexPath.row])
+        vc.navigationItem.largeTitleDisplayMode = .never
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -96,7 +96,7 @@ class UpcomingTableViewCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(albumImgView.snp.trailing).offset(10)
             make.top.equalToSuperview().offset(5)
-            make.trailing.equalToSuperview().offset(-45)
+            make.trailing.equalToSuperview().offset(-10)
         }
         
         descLabel.snp.makeConstraints { make in
@@ -116,13 +116,12 @@ class UpcomingTableViewCell: UITableViewCell {
         }
         
         playButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-10)
-            make.width.height.equalTo(30)
-            make.centerY.equalToSuperview()
+            make.width.height.equalTo(40)
+            make.center.equalTo(albumImgView)
         }
     }
 
-    public func configure(with model: UpcomingViewModel) {
+    public func configure(with model: MovieViewModel) {
          
         albumImgView.sd_setImage(with: URL(string: model.imgUrl), placeholderImage: UIImage(named: "home_header_img"))
         titleLabel.text = model.title

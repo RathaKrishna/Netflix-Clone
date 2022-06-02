@@ -15,8 +15,6 @@ class HeroHeaderView: UIView {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
         imgView.clipsToBounds = true
-        imgView.image = UIImage(named: "home_header_img")
-        
         return imgView
     }()
     
@@ -49,7 +47,6 @@ class HeroHeaderView: UIView {
         addSubview(playButton)
         addSubview(downloadButton)
 //        applyConstraints()
-        configureImg(with: "")
     }
     
     
@@ -79,11 +76,11 @@ class HeroHeaderView: UIView {
         }
 
     }
-    
-    public func configureImg(with imgUrl: String) {
-        imageView.sd_setImage(with: URL(string: imgUrl), placeholderImage: UIImage(named: "home_header_img"))
-       
+    public func configure(with model: Movie){
+        let url = "\(Constants.thumbnailImage)\(model.backdrop_path ?? "")"
+        imageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(systemName: "photo"))
     }
+
     
 //    private func applyConstraints() {
 //        let playButtonConstraints = [

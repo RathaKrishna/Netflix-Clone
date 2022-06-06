@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 struct Constants {
-    static let G_API_KEY = "AIzaSyD_3_t5zfV5MrtEks6FYKyaR5Q4iZ4fwxw"
-    static let APIKEY = "60ae421fc805298e8f801d4287e3d4c2"
+    static let G_API_KEY = ""
+    static let APIKEY = ""
     static let baseURL = "https://api.themoviedb.org"
     static let imageURL = "https://image.tmdb.org"
     

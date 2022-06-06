@@ -13,6 +13,8 @@ enum Sections: Int {
     case Popular = 2
     case Upcoming = 3
     case TopRated = 4
+    case Recommended
+    case Similar
 }
 
 class HomeViewController: UIViewController {
@@ -23,6 +25,8 @@ class HomeViewController: UIViewController {
     let tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
+        table.separatorColor = .clear
+        table.backgroundColor = .systemBackground
         return table
     }()
     
@@ -94,7 +98,7 @@ class HomeViewController: UIViewController {
     }
 }
 // MARK: - Tableview
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource, CollectionViewTableViewCellDelegate {
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource, CollectionViewTableViewCellDelegate, HomeSectionHeaderViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return sectionTitles.count
@@ -145,9 +149,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, Collec
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return 44
     }
-    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let hView = HomeSectionHeaderView(frame: CGRect(x: 0, y: 0, width: Constants.kWidth, height: 44))
+        hView.configure(name: sectionTitles[section], section: section)
+        hView.delegate = self
+        return hView
+    }
+    /*
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         
@@ -159,7 +169,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, Collec
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionTitles[section]
-    }
+    }*/
     // hide and show navigation bar on scroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let defaultOffset = view.safeAreaInsets.top
@@ -173,5 +183,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, Collec
         let vc = MovieDetailsViewController(with: item)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func didMoreButtonClicked(section: Int) {
+        navigationController?.navigationBar.transform = .init(translationX: 0, y: 0)
+        let vc = MoviesListViewController(section: section,movieId: 0)
+       
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

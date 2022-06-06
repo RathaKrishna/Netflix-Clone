@@ -16,6 +16,9 @@
 		08DFC1F02845AE7500BCA12C /* SearchResultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DFC1EF2845AE7500BCA12C /* SearchResultCollectionViewCell.swift */; };
 		08DFC1F22845E9A500BCA12C /* YoutubeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DFC1F12845E9A500BCA12C /* YoutubeModel.swift */; };
 		08DFC1F42845F24200BCA12C /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DFC1F32845F24200BCA12C /* MovieDetailsViewController.swift */; };
+		08DFF6E8284D9C2B00577449 /* HomeSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DFF6E7284D9C2B00577449 /* HomeSectionHeaderView.swift */; };
+		08DFF6EA284DA48700577449 /* MoviesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DFF6E9284DA48700577449 /* MoviesListViewController.swift */; };
+		08DFF6EC284DA9CB00577449 /* MovieDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DFF6EB284DA9CB00577449 /* MovieDescriptionViewController.swift */; };
 		08E18063283C6B44007ED57C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E18062283C6B44007ED57C /* AppDelegate.swift */; };
 		08E18065283C6B44007ED57C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E18064283C6B44007ED57C /* SceneDelegate.swift */; };
 		08E18067283C6B44007ED57C /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E18066283C6B44007ED57C /* MainTabViewController.swift */; };
@@ -68,6 +71,9 @@
 		08DFC1EF2845AE7500BCA12C /* SearchResultCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchResultCollectionViewCell.swift; path = NetflixClone/Views/SearchResultCollectionViewCell.swift; sourceTree = SOURCE_ROOT; };
 		08DFC1F12845E9A500BCA12C /* YoutubeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeModel.swift; sourceTree = "<group>"; };
 		08DFC1F32845F24200BCA12C /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
+		08DFF6E7284D9C2B00577449 /* HomeSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSectionHeaderView.swift; sourceTree = "<group>"; };
+		08DFF6E9284DA48700577449 /* MoviesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListViewController.swift; sourceTree = "<group>"; };
+		08DFF6EB284DA9CB00577449 /* MovieDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDescriptionViewController.swift; sourceTree = "<group>"; };
 		08E1805F283C6B44007ED57C /* NetflixClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetflixClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08E18062283C6B44007ED57C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08E18064283C6B44007ED57C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -258,6 +264,8 @@
 				08AF3FA728409EB400627287 /* SearchResultViewController.swift */,
 				08E1809C283CA8A3007ED57C /* ProfileViewController.swift */,
 				08DFC1F32845F24200BCA12C /* MovieDetailsViewController.swift */,
+				08DFF6E9284DA48700577449 /* MoviesListViewController.swift */,
+				08DFF6EB284DA9CB00577449 /* MovieDescriptionViewController.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -268,6 +276,7 @@
 				08E180A5283CCC71007ED57C /* CollectionViewTableViewCell.swift */,
 				08E180A7283CD78F007ED57C /* HeroHeaderView.swift */,
 				08EDB25C283F176000E339EF /* HomeViewCollectionViewCell.swift */,
+				08DFF6E7284D9C2B00577449 /* HomeSectionHeaderView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -552,6 +561,7 @@
 				08DBD0B8283E2BB400EFA94E /* Movie.swift in Sources */,
 				08AF3FA828409EB400627287 /* SearchResultViewController.swift in Sources */,
 				08EDB25D283F176000E339EF /* HomeViewCollectionViewCell.swift in Sources */,
+				08DFF6E8284D9C2B00577449 /* HomeSectionHeaderView.swift in Sources */,
 				08E18067283C6B44007ED57C /* MainTabViewController.swift in Sources */,
 				08E18063283C6B44007ED57C /* AppDelegate.swift in Sources */,
 				08DFC1F22845E9A500BCA12C /* YoutubeModel.swift in Sources */,
@@ -565,6 +575,8 @@
 				08DBD0B6283E0E0E00EFA94E /* APICaller.swift in Sources */,
 				08E180A3283CA8D4007ED57C /* DownloadViewController.swift in Sources */,
 				08E18099283CA886007ED57C /* HomeViewController.swift in Sources */,
+				08DFF6EA284DA48700577449 /* MoviesListViewController.swift in Sources */,
+				08DFF6EC284DA9CB00577449 /* MovieDescriptionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

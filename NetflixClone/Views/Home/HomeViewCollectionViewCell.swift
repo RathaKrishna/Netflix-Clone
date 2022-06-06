@@ -13,10 +13,14 @@ class HomeViewCollectionViewCell: UICollectionViewCell {
     private let posterImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
+        imgView.layer.cornerRadius = 12
+        imgView.layer.masksToBounds = true
+        imgView.clipsToBounds = true
         return imgView
     }()
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.backgroundColor = .clear
         contentView.clipsToBounds = true
         contentView.addSubview(posterImgView)
     }

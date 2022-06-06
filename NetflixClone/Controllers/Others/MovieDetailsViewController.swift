@@ -14,7 +14,7 @@ class MovieDetailsViewController: UIViewController {
     private var viewModels = [MovieViewModel]()
     private var movie: Movie
     
-    let sectionTitles: [String] = ["recommended Movies", "similar Movies"]
+    let sectionTitles: [String] = ["Recommended Movies", "Similar Movies"]
     
     private let titleLable: UILabel = {
         let label = UILabel()
@@ -46,11 +46,23 @@ class MovieDetailsViewController: UIViewController {
     
     private let downloadButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Save", for: .normal)
+        let image = UIImage(systemName: "square.and.arrow.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 22))
+        button.setImage(image, for: .normal)
+        button.tintColor = .label
+        //        button.setTitleColor(UIColor.label, for: .normal)
+        //        button.layer.borderColor = UIColor.secondaryLabel.cgColor
+        //        button.layer.borderWidth = 0.8
+        //        button.layer.cornerRadius = 3
+        return button
+    }()
+    
+    private let summaryBtn: UIButton = {
+        let button = UIButton()
+        button.setTitle("Summary >>", for: .normal)
+        button.backgroundColor = .secondarySystemBackground
         button.setTitleColor(UIColor.label, for: .normal)
-        button.layer.borderColor = UIColor.secondaryLabel.cgColor
-        button.layer.borderWidth = 0.8
-        button.layer.cornerRadius = 3
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
+        button.layer.cornerRadius = 12
         return button
     }()
     
@@ -67,7 +79,7 @@ class MovieDetailsViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         view.addSubview(titleLable)
-        view.addSubview(descLabel)
+        view.addSubview(summaryBtn)
         view.addSubview(downloadButton)
         view.addSubview(playerView)
         
@@ -78,6 +90,8 @@ class MovieDetailsViewController: UIViewController {
         getUpMovies()
         getYoutubeVideo()
         navigationController?.navigationBar.tintColor = .label
+        
+        summaryBtn.addTarget(self, action: #selector(summaryClicked), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -91,23 +105,25 @@ class MovieDetailsViewController: UIViewController {
         downloadButton.snp.makeConstraints { make in
             make.top.equalTo(playerView.snp.bottom).offset(10)
             make.right.equalToSuperview().offset(-5)
-            make.width.equalTo(90)
+            make.height.equalTo(30)
+            make.width.equalTo(30)
+        }
+        summaryBtn.snp.makeConstraints { make in
+            make.right.equalTo(downloadButton.snp.left).offset(-10)
+            make.top.equalTo(downloadButton)
+            make.width.equalTo(100)
             make.height.equalTo(30)
         }
         titleLable.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(10)
-            make.right.equalTo(downloadButton.snp.left).offset(-10)
+            make.right.equalTo(summaryBtn.snp.left).offset(-5)
             make.top.equalTo(playerView.snp.bottom).offset(10)
         }
-        descLabel.snp.makeConstraints { make in
-            make.left.equalTo(titleLable)
-            make.right.equalToSuperview().offset(-10)
-            make.top.equalTo(titleLable.snp.bottom)
-        }
+        
         
         tableView.snp.makeConstraints { make in
             make.left.right.equalTo(playerView)
-            make.top.equalTo(descLabel.snp.bottom).offset(15)
+            make.top.equalTo(titleLable.snp.bottom).offset(15)
             make.bottom.equalTo(view.safeAreaInsets.bottom)
         }
         
@@ -159,9 +175,18 @@ class MovieDetailsViewController: UIViewController {
         descLabel.text = self.movie.overview
         
     }
+    
+    @objc private func summaryClicked() {
+        let vc = MovieDescriptionViewController()
+        if let presentationController = vc.presentationController as? UISheetPresentationController {
+            presentationController.detents = [.medium()] /// change to [.medium(), .large()] for a half *and* full screen sheet
+        }
+        vc.configure(self.movie)
+        present(vc, animated: true)
+    }
 }
 
-extension MovieDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+extension MovieDetailsViewController: UITableViewDelegate, UITableViewDataSource, HomeSectionHeaderViewDelegate, CollectionViewTableViewCellDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return sectionTitles.count
@@ -199,7 +224,7 @@ extension MovieDetailsViewController: UITableViewDelegate, UITableViewDataSource
             }
         }
         
-        //        cell.delegate = self
+        cell.delegate = self
         return cell
     }
     
@@ -208,19 +233,49 @@ extension MovieDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return 44
     }
-    
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header = view as? UITableViewHeaderFooterView else { return }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let hView = HomeSectionHeaderView(frame: CGRect(x: 0, y: 0, width: Constants.kWidth, height: 44))
+        hView.configure(name: sectionTitles[section], section: section)
+        hView.delegate = self
+        return hView
+    }
+    /*
+     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+     guard let header = view as? UITableViewHeaderFooterView else { return }
+     
+     header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+     header.textLabel?.frame = CGRect(x: header.bounds.origin.x + 20, y: header.bounds.origin.y, width: 100, height: header.bounds.height)
+     header.textLabel?.textColor = .label
+     header.textLabel?.text = header.textLabel?.text?.capitalizeFirstLetter()
+     }
+     
+     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+     return sectionTitles[section]
+     }*/
+    // collectionview delegate
+    func didCellClicked(with item: Movie) {
+        let vc = MovieDetailsViewController(with: item)
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    func didMoreButtonClicked(section: Int) {
         
-        header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
-        header.textLabel?.frame = CGRect(x: header.bounds.origin.x + 20, y: header.bounds.origin.y, width: 100, height: header.bounds.height)
-        header.textLabel?.textColor = .label
-        header.textLabel?.text = header.textLabel?.text?.capitalizeFirstLetter()
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionTitles[section]
+        switch section {
+        case 0:
+            let vc = MoviesListViewController(section: 5,movieId: self.movie.id)
+            
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 1:
+            
+            let vc = MoviesListViewController(section: 6,movieId: self.movie.id)
+            
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        default:
+            print("\(section)")
+        }
     }
 }

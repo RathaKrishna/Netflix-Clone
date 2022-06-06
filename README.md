@@ -13,7 +13,10 @@ Working Netfix Clone made using Swift MVVM, Core Data, TMDB movie database API a
 ![Apple iPhone 11 Pro Max Screenshot 5](https://user-images.githubusercontent.com/3157579/172135206-e8481e54-79ec-49d6-9255-8fb4d04d5d97.png)
 
 ## Requirements
-Before starting you need get API key for TMDB API and Youtube API
+Before starting you need get a API key for TMDB API and Youtube API
+* Get TMDB API key at https://developers.themoviedb.org/
+* Get Youtube API key at https://console.cloud.google.com/
+
 ```
 struct Constants {
     static let G_API_KEY = "" // Youtube API Key
